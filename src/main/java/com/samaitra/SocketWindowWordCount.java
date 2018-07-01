@@ -7,8 +7,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
-import org.apache.ignite.Ignite;
-import org.apache.ignite.Ignition;
 import org.apache.ignite.sink.flink.IgniteSink;
 
 public class SocketWindowWordCount {
@@ -16,22 +14,15 @@ public class SocketWindowWordCount {
     /** Cache name. */
     private static final String TEST_CACHE = "testCache";
 
-    /** Cache entries count. */
-    private static final int CACHE_ENTRY_COUNT = 10000;
-
-    /** Streaming events for testing. */
-    private static final long DFLT_STREAMING_EVENT = 10000;
-
     /** Ignite test configuration file. */
-    private static final String GRID_CONF_FILE = "src/test/resources/example-ignite.xml";
+    private static final String GRID_CONF_FILE = "/Users/saikat/git/streamers/src/main/resources/example-ignite.xml";
 
     public static void main(String[] args) throws Exception {
-        Ignite ignite = Ignition.start(GRID_CONF_FILE);
         IgniteSink igniteSink = new IgniteSink(TEST_CACHE, GRID_CONF_FILE);
 
         igniteSink.setAllowOverwrite(true);
 
-        igniteSink.setAutoFlushFrequency(10);
+        igniteSink.setAutoFlushFrequency(5L);
 
         igniteSink.start();
 
