@@ -30,7 +30,6 @@
         Note, this appender is disabled by default.
         To enable, uncomment the section below and also CONSOLE appender in the <root> element.
     -->
-    <!--
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
 
@@ -45,7 +44,6 @@
             <param name="levelMax" value="WARN"/>
         </filter>
     </appender>
-    -->
 
     <!--
         Logs all ERROR messages to console.
@@ -69,7 +67,7 @@
     -->
     <appender name="FILE" class="org.apache.ignite.logger.log4j.Log4jRollingFileAppender">
         <param name="Threshold" value="DEBUG"/>
-        <param name="File" value="${IGNITE_HOME}/work/log/ignite.log"/>
+        <param name="File" value="/Users/saikat/Downloads/flink-1.5.0/log/ignite.log"/>
         <param name="Append" value="true"/>
         <param name="MaxFileSize" value="10MB"/>
         <param name="MaxBackupIndex" value="10"/>
@@ -78,21 +76,18 @@
         </layout>
     </appender>
 
-    <!--
+
     <category name="org.apache.ignite">
         <level value="DEBUG"/>
     </category>
-    -->
 
     <!--
         Uncomment to disable courtesy notices, such as SPI configuration
         consistency warnings.
     -->
-    <!--
     <category name="org.apache.ignite.CourtesyConfigNotice">
         <level value="OFF"/>
     </category>
-    -->
 
     <category name="org.springframework">
         <level value="WARN"/>

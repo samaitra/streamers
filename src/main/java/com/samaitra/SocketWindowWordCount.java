@@ -1,30 +1,30 @@
 package com.samaitra;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.common.functions.ReduceFunction;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.util.Collector;
 import org.apache.ignite.sink.flink.IgniteSink;
 
 public class SocketWindowWordCount {
 
-    /** Cache name. */
-    private static final String TEST_CACHE = "testCache";
-
-    /** Ignite test configuration file. */
-    private static final String GRID_CONF_FILE = "/Users/saikat/git/streamers/src/main/resources/example-ignite.xml";
 
     public static void main(String[] args) throws Exception {
-        IgniteSink igniteSink = new IgniteSink(TEST_CACHE, GRID_CONF_FILE);
+        /** Ignite test configuration file. */
+        final String GRID_CONF_FILE = "/Users/saikat/git/streamers/src/main/resources/example-ignite.xml";
+
+        IgniteSink igniteSink = new IgniteSink("testCache", GRID_CONF_FILE);
 
         igniteSink.setAllowOverwrite(true);
 
         igniteSink.setAutoFlushFrequency(5L);
 
-        igniteSink.start();
+        Configuration p = new Configuration();
+        igniteSink.open(p);
 
         // the port to connect to
         final int port;
@@ -43,23 +43,16 @@ public class SocketWindowWordCount {
         DataStream<String> text = env.socketTextStream("localhost", port, "\n");
 
         // parse the data, group it, window it, and aggregate the counts
-        DataStream<WordWithCount> windowCounts = text
-            .flatMap(new FlatMapFunction<String, WordWithCount>() {
+        SingleOutputStreamOperator<Map<String, String>> windowCounts = text
+            .map(new MapFunction<String, Map<String, String>>() {
                 @Override
-                public void flatMap(String value, Collector<WordWithCount> out) {
-                    for (String word : value.split("\\s")) {
-                        out.collect(new WordWithCount(word, 1L));
-                    }
-                }
-            })
-            .keyBy("word")
-            .timeWindow(Time.seconds(5), Time.seconds(1))
-            .reduce(new ReduceFunction<WordWithCount>() {
-                @Override
-                public WordWithCount reduce(WordWithCount a, WordWithCount b) {
-                    return new WordWithCount(a.word, a.count + b.count);
+                public Map<String, String> map(String value) throws Exception {
+                    Map<String, String> myMap = new HashMap<>();
+                    myMap.put(value, "dummy");
+                    return myMap;
                 }
             });
+
 
         // print the results with a single thread, rather than in parallel
         //windowCounts.print().setParallelism(1);
@@ -67,22 +60,4 @@ public class SocketWindowWordCount {
         env.execute("Socket Window WordCount");
     }
 
-    // Data type for words with count
-    public static class WordWithCount {
-
-        public String word;
-        public long count;
-
-        public WordWithCount() {}
-
-        public WordWithCount(String word, long count) {
-            this.word = word;
-            this.count = count;
-        }
-
-        @Override
-        public String toString() {
-            return word + " : " + count;
-        }
-    }
 }
