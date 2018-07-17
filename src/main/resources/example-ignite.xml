@@ -33,13 +33,6 @@
         <!-- Enable client mode. -->
         <property name="clientMode" value="false"/>
 
-        <!-- Enable log4j logging. -->
-        <property name="gridLogger">
-            <bean class="org.apache.ignite.logger.log4j.Log4JLogger">
-                <constructor-arg type="java.lang.String" value="/Users/saikat/git/streamers/src/main/resources/log4j.xml"/>
-            </bean>
-        </property>
-
         <!-- Cache accessed from IgniteSink. -->
         <property name="cacheConfiguration">
             <list>

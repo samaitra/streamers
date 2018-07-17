@@ -48,14 +48,13 @@ public class SocketWindowWordCount {
                 @Override
                 public Map<String, String> map(String value) throws Exception {
                     Map<String, String> myMap = new HashMap<>();
-                    myMap.put(value, "dummy");
+                    myMap.put(value, "test data value");
                     return myMap;
                 }
             });
 
 
         // print the results with a single thread, rather than in parallel
-        //windowCounts.print().setParallelism(1);
         windowCounts.addSink(igniteSink);
         env.execute("Socket Window WordCount");
     }
