@@ -17,7 +17,8 @@ public class IgniteClientExample {
             System.out.println("cache = " +cache);
         }
 
-        ClientCache<String, String> cache = igniteClient.getOrCreateCache("testCache");
+        ClientCache<String, Integer> cache = igniteClient.getOrCreateCache("testCache");
         System.out.println("cache size = " +cache.size());
+        System.out.println("value for key hello is "+cache.get("hello"));
     }
 }
