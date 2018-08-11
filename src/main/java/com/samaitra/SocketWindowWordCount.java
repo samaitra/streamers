@@ -1,6 +1,9 @@
 package com.samaitra;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
@@ -44,16 +47,17 @@ public class SocketWindowWordCount {
         DataStream<String> text = env.socketTextStream("localhost", port, "\n");
 
         // parse the data, group it, window it, and aggregate the counts
-        SingleOutputStreamOperator<Tuple2<String, Integer>> windowCounts = text
+        SingleOutputStreamOperator<Map<String, Integer>> windowCounts = text
             .flatMap(new Splitter())
             .keyBy(0)
             .timeWindow(Time.seconds(5))
-            .sum(1);
+            .sum(1)
+            .map(new Mapper());
 
 
         // print the results with a single thread, rather than in parallel
-        //windowCounts.addSink(igniteSink);
-        windowCounts.print();
+        windowCounts.addSink(igniteSink);
+        //windowCounts.print();
         env.execute("Socket Window WordCount");
     }
 
@@ -64,6 +68,15 @@ public class SocketWindowWordCount {
             for (String word: sentence.split(" ")) {
                 out.collect(new Tuple2<String, Integer>(word, 1));
             }
+        }
+    }
+
+    public static class Mapper implements MapFunction<Tuple2<String, Integer>, Map<String, Integer>> {
+        @Override
+        public Map<String, Integer> map(Tuple2<String, Integer> tuple2) throws Exception {
+            Map<String, Integer> myWordMap = new HashMap<>();
+            myWordMap.put(tuple2.f0, tuple2.f1);
+            return myWordMap;
         }
     }
 }
