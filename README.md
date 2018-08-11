@@ -59,6 +59,14 @@ bye : 1
 ipsum : 4
 ```
 
+### Ignite rest service
+To check the cache key values you can use the Ignite rest service 
+
+```
+$ curl -X GET http://localhost:8080/ignite\?cmd\=getall\&k1\=jam\&cacheName\=testCache
+```
+
+
 ### To stop Flink when you’re done type:
 ```
 $ ./bin/stop-cluster.sh

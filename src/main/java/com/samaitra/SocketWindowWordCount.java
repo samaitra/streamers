@@ -56,8 +56,8 @@ public class SocketWindowWordCount {
 
 
         // print the results with a single thread, rather than in parallel
-        windowCounts.addSink(igniteSink);
         //windowCounts.print();
+        windowCounts.addSink(igniteSink);
         env.execute("Socket Window WordCount");
     }
 
