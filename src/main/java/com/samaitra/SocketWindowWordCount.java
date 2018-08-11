@@ -1,8 +1,7 @@
 package com.samaitra;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -45,12 +44,11 @@ public class SocketWindowWordCount {
         DataStream<String> text = env.socketTextStream("localhost", port, "\n");
 
         // parse the data, group it, window it, and aggregate the counts
-        SingleOutputStreamOperator<Map<String, Integer>> windowCounts = text
+        SingleOutputStreamOperator<Tuple2<String, Integer>> windowCounts = text
             .flatMap(new Splitter())
             .keyBy(0)
             .timeWindow(Time.seconds(5))
             .sum(1);
-
 
 
         // print the results with a single thread, rather than in parallel
@@ -60,13 +58,11 @@ public class SocketWindowWordCount {
     }
 
 
-    public static class Splitter implements FlatMapFunction<String, Map<String, Integer>> {
+    public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
-        public void flatMap(String sentence, Collector<Map<String, Integer>> out) throws Exception {
+        public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
             for (String word: sentence.split(" ")) {
-                Map<String, Integer> collectorMap = new HashMap<>();
-                collectorMap.put(word, 1);
-                out.collect(collectorMap);
+                out.collect(new Tuple2<String, Integer>(word, 1));
             }
         }
     }
