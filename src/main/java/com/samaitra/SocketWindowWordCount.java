@@ -2,12 +2,14 @@ package com.samaitra;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.util.Collector;
 import org.apache.ignite.sink.flink.IgniteSink;
 
 public class SocketWindowWordCount {
@@ -43,20 +45,29 @@ public class SocketWindowWordCount {
         DataStream<String> text = env.socketTextStream("localhost", port, "\n");
 
         // parse the data, group it, window it, and aggregate the counts
-        SingleOutputStreamOperator<Map<String, String>> windowCounts = text
-            .map(new MapFunction<String, Map<String, String>>() {
-                @Override
-                public Map<String, String> map(String value) throws Exception {
-                    Map<String, String> myMap = new HashMap<>();
-                    myMap.put(value, "test data value");
-                    return myMap;
-                }
-            });
+        SingleOutputStreamOperator<Map<String, Integer>> windowCounts = text
+            .flatMap(new Splitter())
+            .keyBy(0)
+            .timeWindow(Time.seconds(5))
+            .sum(1);
+
 
 
         // print the results with a single thread, rather than in parallel
-        windowCounts.addSink(igniteSink);
+        //windowCounts.addSink(igniteSink);
+        windowCounts.print();
         env.execute("Socket Window WordCount");
     }
 
+
+    public static class Splitter implements FlatMapFunction<String, Map<String, Integer>> {
+        @Override
+        public void flatMap(String sentence, Collector<Map<String, Integer>> out) throws Exception {
+            for (String word: sentence.split(" ")) {
+                Map<String, Integer> collectorMap = new HashMap<>();
+                collectorMap.put(word, 1);
+                out.collect(collectorMap);
+            }
+        }
+    }
 }
