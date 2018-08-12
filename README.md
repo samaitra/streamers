@@ -26,29 +26,52 @@ You can also verify that the system is running by checking the log files in the 
 $ tail log/flink-*-standalonesession-*.log
 ```
 
-### Run the Example
-Now, we are going to run this Flink application. It will read text from a socket and once every 5 seconds print the number of occurrences of each distinct word during the previous 5 seconds, i.e. a tumbling window of processing time, as long as words are floating in.
+### Download kafka 
 
-First of all, we use netcat to start local server via
+### start zookeeper server
 ```
-$ nc -l 9000
-```
-
-### Submit the Flink program:
-```
-$ ./bin/flink run streamers-1.0-SNAPSHOT.jar --port 9000
+$./bin/zookeeper-server-start.sh ./config/zookeeper.properties
 ```
 
-Starting execution of program
-The program connects to the socket and waits for input. You can check the web interface to verify that the job is running as expected:
-
-Dispatcher: Overview (cont'd) Dispatcher: Running Jobs
-Words are counted in time windows of 5 seconds (processing time, tumbling windows) and are printed to stdout. Monitor the TaskManager’s output file and write some text in nc (input is sent to Flink line by line after hitting ):
+### start broker
 ```
-$ nc -l 9000
-lorem ipsum
-ipsum ipsum ipsum
-bye
+./bin/kafka-server-start.sh ./config/server.properties 
+```
+
+### create topic “mytopic”
+```
+$ ./bin/kafka-topics.sh --create --topic mytopic --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+```
+
+### Describe topic "mytopic"
+
+```
+$ bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic mytopic
+```
+
+### produce something into the topic (write something and hit enter)
+```
+$ ./bin/kafka-console-producer.sh --topic mytopic --broker-list localhost:9092
+```
+
+### consume from the topic using the console producer
+```
+$ ./bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
+```
+
+### Build the Flink program :
+```
+$ mvn clean package
+```
+
+### Submit the Flink program :
+```
+$ ./bin/flink run streamers-1.0-SNAPSHOT.jar
+```
+
+### produce something into the topic (write something and hit enter)
+```
+$ ./bin/kafka-console-producer.sh --topic mytopic --broker-list localhost:9092
 ```
 
 The .out file will print the counts at the end of each time window as long as words are floating in, e.g.:
