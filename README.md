@@ -50,7 +50,7 @@ $ ./bin/kafka-topics.sh --create --topic mytopic --zookeeper localhost:2181 --pa
 ### Describe topic "mytopic"
 
 ```
-$ bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic mytopic
+$ ./bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic mytopic
 ```
 
 ### produce something into the topic (write something and hit enter)
