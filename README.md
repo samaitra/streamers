@@ -1,6 +1,10 @@
 # streamers
 A collection of streaming application
 
+### Stream processing topology
+
+![Stream processing topology](https://github.com/samaitra/streamers/raw/master/resources/streamers.png) 
+
 ### Setup: Download and Start Flink
 
 Download a binary from the downloads page. You can pick any Hadoop/Scala combination you like. If you plan to just use the local file system, any Hadoop version will work fine.
@@ -89,6 +93,11 @@ To check the cache key values you can use the Ignite rest service
 $ curl -X GET http://localhost:8080/ignite\?cmd\=getall\&k1\=jam\&cacheName\=testCache
 ```
 
+### Scan cache 
+To check all the keys from an Ignite cache the following rest service can be used
+```
+$ curl -X GET http://localhost:8080/ignite?cmd=qryscanexe&pageSize=10&cacheName=testCache
+```
 
 ### To stop Flink when you’re done type:
 ```
