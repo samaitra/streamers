@@ -99,6 +99,39 @@ To check all the keys from an Ignite cache the following rest service can be use
 $ curl -X GET http://localhost:8080/ignite?cmd=qryscanexe&pageSize=10&cacheName=testCache
 ```
 
+### Ignite Web Console
+
+#### Ignite Web Console Build Instructions
+
+1. Install MongoDB (version >=3.2.0 <=3.4.15) using instructions from http://docs.mongodb.org/manual/installation.
+2. Install Node.js (version >=8.0.0) using installer from https://nodejs.org/en/download/current for your OS.
+3. Change directory to 'modules/web-console/backend' and
+ run "npm install --no-optional" for download backend dependencies.
+4. Change directory to 'modules/web-console/frontend' and
+ run "npm install --no-optional" for download frontend dependencies.
+5. Build ignite-web-agent module follow instructions from 'modules/web-console/web-agent/README.txt'.
+6. Copy ignite-web-agent-<version>.zip from 'modules/web-console/web-agent/target'
+ to 'modules/web-console/backend/agent_dists' folder.
+7. Unzip ignite-web-agent-<version>.zip in 'modules/web-console/backend/agent_dists'
+8. run './ignite-web-agent.sh' inside ignite-web-agent-<version> folder 
+
+Steps 1 - 4 should be executed once.
+
+#### Ignite Web Console Run In Development Mode
+
+1. Configure MongoDB to run as service or in terminal change dir to $MONGO_INSTALL_DIR/server/3.2/bin
+  and start MongoDB by executing "mongod".
+
+2. In new terminal change directory to 'modules/web-console/backend'.
+   If needed run "npm install --no-optional" (if dependencies changed) and run "npm start" to start backend.
+
+3. In new terminal change directory to 'modules/web-console/frontend'.
+  If needed run "npm install --no-optional" (if dependencies changed) and start webpack in development mode "npm run dev".
+
+4. In browser open: http://localhost:9000
+
+Web console can be used to scan cache and view all the cache contents. 
+
 ### To stop Flink when you’re done type:
 ```
 $ ./bin/stop-cluster.sh
