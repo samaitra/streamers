@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/samaitra/streamers.svg?branch=master)](https://travis-ci.org/samaitra/streamers)
+
 # streamers
 A collection of streaming application
 
