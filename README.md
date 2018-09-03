@@ -23,7 +23,9 @@ $ ./bin/start-cluster.sh  # Start Flink
 ```
 Check the Dispatcher’s web frontend at http://localhost:8081 and make sure everything is up and running. The web frontend should report a single available TaskManager instance.
 
-Dispatcher: Overview
+### Dispatcher: Overview
+
+![Flink Dispatcher Overview](https://github.com/samaitra/streamers/raw/master/resources/flink_job.png) 
 
 You can also verify that the system is running by checking the log files in the logs directory:
 ```
