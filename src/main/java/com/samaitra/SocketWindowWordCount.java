@@ -17,8 +17,6 @@ import org.apache.flink.util.Collector;
 import org.apache.ignite.sink.flink.IgniteSink;
 
 public class SocketWindowWordCount {
-
-
     public static void main(String[] args) throws Exception {
         /** Ignite test configuration file. */
         final String GRID_CONF_FILE = "/Users/saikat/git/streamers/src/main/resources/example-ignite.xml";
@@ -32,7 +30,6 @@ public class SocketWindowWordCount {
         Configuration p = new Configuration();
         igniteSink.open(p);
 
-
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("group.id", "test");
@@ -40,7 +37,7 @@ public class SocketWindowWordCount {
         // get the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        // get input data by connecting to the socket
+        // get input data by connecting to kafka
         DataStream<String> text = env
             .addSource(new FlinkKafkaConsumer010<>("mytopic", new SimpleStringSchema(), properties));
 
@@ -51,14 +48,11 @@ public class SocketWindowWordCount {
             .timeWindow(Time.seconds(5))
             .sum(1)
             .map(new Mapper());
-
-
         // print the results with a single thread, rather than in parallel
-        //windowCounts.print();
+        // windowCounts.print();
         windowCounts.addSink(igniteSink);
-        env.execute("Socket Window WordCount");
+        env.execute("Window WordCount");
     }
-
 
     public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
