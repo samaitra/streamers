@@ -36,17 +36,19 @@ $ tail log/flink-*-standalonesession-*.log
 
 ### Download kafka 
 
-### start zookeeper server
+Download a binary from the downloads page (https://kafka.apache.org/downloads). You can pick Apache Kafka `0.10.2.2` version with `scala 2.11`.
+
+### Start zookeeper server
 ```
 $./bin/zookeeper-server-start.sh ./config/zookeeper.properties
 ```
 
-### start broker
+### Start broker
 ```
 ./bin/kafka-server-start.sh ./config/server.properties 
 ```
 
-### create topic “mytopic”
+### Create topic “mytopic”
 ```
 $ ./bin/kafka-topics.sh --create --topic mytopic --zookeeper localhost:2181 --partitions 1 --replication-factor 1
 ```
@@ -57,12 +59,12 @@ $ ./bin/kafka-topics.sh --create --topic mytopic --zookeeper localhost:2181 --pa
 $ ./bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic mytopic
 ```
 
-### produce something into the topic (write something and hit enter)
+### Produce something into the topic (write something and hit enter)
 ```
 $ ./bin/kafka-console-producer.sh --topic mytopic --broker-list localhost:9092
 ```
 
-### consume from the topic using the console producer
+### Consume from the topic using the console producer
 ```
 $ ./bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
 ```
@@ -92,7 +94,7 @@ $ mvn clean package
 $ ./bin/flink run streamers-1.0-SNAPSHOT.jar
 ```
 
-### produce something into the topic (write something and hit enter)
+### Produce something into the topic (write something and hit enter)
 ```
 $ ./bin/kafka-console-producer.sh --topic mytopic --broker-list localhost:9092
 ```
