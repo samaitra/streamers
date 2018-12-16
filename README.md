@@ -71,8 +71,6 @@ $ ./bin/kafka-console-consumer.sh --topic mytopic --zookeeper localhost:2181
 
 ### Clone Apache Ignite 
 
-As of writing this document the IgniteSink support for data streaming application in Flink cluster is available in `master` branch. 
-
 ```
 $ git clone https://github.com/apache/ignite
 ```
