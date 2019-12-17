@@ -19,7 +19,7 @@ import org.apache.ignite.sink.flink.IgniteSink;
 public class SocketWindowWordCount {
     public static void main(String[] args) throws Exception {
         /** Ignite test configuration file. */
-        final String GRID_CONF_FILE = "/Users/saikat/git/streamers/src/main/resources/example-ignite.xml";
+        final String GRID_CONF_FILE = "PATH_TO_PROJECT/streamers/src/main/resources/example-ignite.xml";
 
         IgniteSink igniteSink = new IgniteSink("testCache", GRID_CONF_FILE);
 
