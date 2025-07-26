@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/samaitra/streamers.svg?branch=master)](https://travis-ci.org/samaitra/streamers)
 
+Apache IgniteSink offers a streaming connector to inject Flink data into the Ignite cache. The sink emits its input data to the Ignite cache. The key feature to note is the performance and scale both Apache Flink and Apache Ignite offer. Apache Flink can process unbounded and bounded data sets and has been designed to run stateful streaming applications at scale. Application computation is distributed and concurrently executed in clusters. Apache Flink is also optimized for local state access for tasks and does checkpointing of local state for durability. Apache Ignite provides streaming capabilities that allow data ingestion at high scale in its in-memory data grid.
+
+In this post, we will discuss how we can build a data streaming application using Apache Flink and Apache Ignite. Building a data streaming application offers the benefit of ingesting large finite and infinite volumes of data in an optimized and fault tolerant way into the Ignite cluster. The data ingestion rate is very high and can scale up to millions of events per seconds.
+
 # streamers
 A collection of streaming application
 
